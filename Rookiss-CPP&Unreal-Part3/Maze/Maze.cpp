@@ -4,9 +4,20 @@
 #include "pch.h"
 #include <iostream>
 #include "ConsoleHelper.h"
+#include "Board.h"
+#include "Player.h"
+
+Board board;
+Player player;
 
 int main()
 {
+    // 랜덤 시드 설정
+    ::srand(static_cast<unsigned int>(time(nullptr)));
+
+    board.Init(25, &player);
+    player.Init(&board);
+
     uint64 lastTick = 0;
 
     while (true)
@@ -23,23 +34,9 @@ int main()
         // === 입력 ===
 
         // === 로직 ===
+        player.Update(deltaTick);
 
         // === 렌더링 ===
-
-        ConsoleHelper::SetCursorPosition(0, 0);
-        // 마우스 커서 깜빡임 제거
-        ConsoleHelper::ShowConsoleCursor(false);
-
-        ConsoleHelper::SetCursorColor(ConsoleColor::RED);
-
-        const char* TILE = "■";
-        for (int32 y = 0; y < 25; y++)
-        {
-            for (int32 x = 0; x < 25; x++)
-            {
-                cout << TILE;
-            }
-            cout << endl;
-        }
+        board.Render();
     }
 }
