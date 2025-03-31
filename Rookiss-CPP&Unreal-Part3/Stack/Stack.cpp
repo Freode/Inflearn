@@ -9,7 +9,8 @@ using namespace std;
 
 // 동적 배열, 연결 리스트 둘 다 가능
 
-template<typename T>
+// default : vector<T>
+template<typename T, typename Container = vector<T>>
 class Stack
 {
 public:
@@ -37,12 +38,17 @@ private:
     // 같은 함수 이름을 사용
 
     //vector<T> _container;
-    list<T> _container;
+    //list<T> _container;
+    Container _container;
 };
 
 int main()
 {
-    Stack<int> s;
+    // vector<int> 방식
+    // Stack<int> s;
+
+    // list<int> 방식
+    Stack<int, list<int>> s;
 
     s.push(1);
     s.push(2);
