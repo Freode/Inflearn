@@ -1,5 +1,6 @@
 ﻿#include <iostream>
 #include <vector>
+#include <queue>
 
 using namespace std;
 
@@ -140,33 +141,33 @@ struct Vertex
 };
 
 vector<Vertex> vertices;
-vector<vector<int>> adjacnet;
+vector<vector<int>> adjacent;
 vector<bool> visited;
 
 void CreateGraph_4()
 {
     vertices.resize(6);
-    adjacnet = vector<vector<int>>(6);
+    adjacent = vector<vector<int>>(6);
 
     // 인접 리스트
-    //adjacnet[0].push_back(1);
-    //adjacnet[0].push_back(3);
-    //adjacnet[1].push_back(0);
-    //adjacnet[1].push_back(2);
-    //adjacnet[1].push_back(3);
-    //adjacnet[3].push_back(4);
-    //adjacnet[5].push_back(4);
+    adjacent[0].push_back(1);
+    adjacent[0].push_back(3);
+    adjacent[1].push_back(0);
+    adjacent[1].push_back(2);
+    adjacent[1].push_back(3);
+    adjacent[3].push_back(4);
+    adjacent[5].push_back(4);
 
     // 인접 행렬
-    adjacnet = vector<vector<int>>
-    {
-        {0, 1, 0, 1, 0, 0},
-        {1, 0, 1, 1, 0, 0},
-        {0, 0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 1, 0},
-        {0, 0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 1, 0},
-    };
+    //adjacent = vector<vector<int>>
+    //{
+    //    {0, 1, 0, 1, 0, 0},
+    //    {1, 0, 1, 1, 0, 0},
+    //    {0, 0, 0, 0, 0, 0},
+    //    {0, 0, 0, 0, 1, 0},
+    //    {0, 0, 0, 0, 0, 0},
+    //    {0, 0, 0, 0, 1, 0},
+    //};
 
     visited = vector<bool>(6, false);
 }
@@ -179,24 +180,24 @@ void Dfs(int here)
 
     // 인접 리스트 version
     // 모든 인접 정점을 순회한다.
-    //for (int i = 0; i < adjacnet[here].size(); i++)
-    //{
-    //    int there = adjacnet[here][i];
-    //    if (visited[there] == false)
-    //        Dfs(there);
-    //}
-
-    // 인접 행렬 version
-    // 모든 인접 정점을 순회한다.
-    for (int there = 0; there < 6; there++)
+    for (int i = 0; i < adjacent[here].size(); i++)
     {
-        if (adjacnet[here][there] == 0)
-            continue;
-
-        // 아직 방문하지 않은 곳이 있으면, 방문한다.
+        int there = adjacent[here][i];
         if (visited[there] == false)
             Dfs(there);
     }
+
+    // 인접 행렬 version
+    // 모든 인접 정점을 순회한다.
+    //for (int there = 0; there < 6; there++)
+    //{
+    //    if (adjacent[here][there] == 0)
+    //        continue;
+
+    //    // 아직 방문하지 않은 곳이 있으면, 방문한다.
+    //    if (visited[there] == false)
+    //        Dfs(there);
+    //}
 }
 
 // 모두 돌았는지 확인하기
@@ -207,13 +208,58 @@ void DfsAll()
             Dfs(i);
 }
 
+// 14강. BFS (너비 우선 탐색)
+
+// 방문 시점과 발견 시점이 다를 수 있음.
+void Bfs(int here)
+{
+    // 누구에 의해서 발견 되었는지 확인
+    vector<int> parent(6, -1);
+    // 시작점에서 얼만큼 떨어져 있는지 확인
+    vector<int> distance(6, -1);
+
+    queue<int> q;
+
+    q.push(here);
+    visited[here] = true;
+    parent[here] = here;
+    distance[here] = 0;
+
+    while (q.empty() == false)
+    {
+        here = q.front();
+        q.pop();
+
+        cout << "Visited : " << here << endl;
+
+        for (int there : adjacent[here])
+        {
+            if (visited[there])
+                continue;
+
+            q.push(there);
+            visited[there] = true;
+
+            parent[there] = here;
+            distance[there] = distance[here] + 1;
+        }
+    }
+}
+
+void BfsAll()
+{
+    for (int i = 0; i < 6; i++)
+        if (visited[i] == false)
+            Bfs(i);
+}
+
 int main()
 {
     CreateGraph_1();
     CreateGraph_2();
 
     CreateGraph_4();
-    DfsAll();
+    BfsAll();
 
     return 0;
 }
