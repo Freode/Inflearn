@@ -53,7 +53,7 @@ void Dijikstra(int here)
 	best[here] = 0;
 	parent[here] = here;
 
-	// 지금 현재 방식은 성능이 좋지 않음.
+	// 지금 현재 방식은 성능이 좋지 않음. -> 우선순위 큐로 처리해야 함.
 
 	while (discovered.empty() == false)
 	{
